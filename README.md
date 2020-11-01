@@ -17,8 +17,12 @@ format, though the tradeoff is malleability, as you must define how large
 the field sizes are before getting going (I'll solve this with some kind of
 utility if it ever comes up as a problem). 
 
+There is both a to- and from-Tablatal utility. Both use a list of dicts as
+their starting point, but can also be used directly in the CLI to interface
+with JSON files.
 
-### Syntax
+
+### Tablatal Syntax
 
 * Comments are preceded by a semicolon.
 * The header line is expected to be all caps and may be preceded by a
@@ -33,11 +37,11 @@ Examples can be found
 
 ### Usage
 
-As a CLI, the parser takes in a plaintext Tablatal file (`tbtl`) and
-returns a `JSON` file. There is one optional argument `--headers`, which
-you can supply a set of custom headers separated by commas for the parser
-to use when outputting. For instance, if the beginning of your file
-including your headers looks like this:
+As a CLI, the Tablatal-to-JSON parser takes in a plaintext Tablatal file 
+(`tbtl`) and returns a `JSON` file. There is one optional argument
+`--headers`, which you can supply a set of custom headers separated by
+commas for the parser to use when outputting. For instance, if the
+beginning of your file including your headers looks like this:
 
 ```
 ; The horaire is a collection of logs.
@@ -55,3 +59,6 @@ from giving it a useful name. This can be remedied via the CLI:
 
 `python3 tbtl_parse.py input.tbtl output.json --headers "DATE, CODE, HOST, PIC,
  NAME"`
+ 
+ The JSON-to-Tablatal parser needs a little user input to determine the
+ order of the fields, but otherwise operates the same as the other utility.
