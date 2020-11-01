@@ -45,8 +45,8 @@ def get_field_lengths(data: list, headers: list) -> dict:
     field_data = {field: len(field) for field in headers}
     for entry in data:
         for key, value in entry.items():
-            if value is not None and len(value) > field_data[key]:
-                field_data[key] = len(value)
+            if value is not None and len(str(value)) > field_data[key]:
+                field_data[key] = len(str(value))
     return field_data
 
 
@@ -54,12 +54,12 @@ def format_parsed_data(data: list, headers: list, lengths: dict) -> str:
     entries = []
     header_line = ""
     for header in headers:
-        header_line += header.ljust(lengths[header]) + ' '
-    entries.append(header_line)
+        header_line += header.upper().ljust(lengths[header]) + ' '
+    entries.append(header_line.strip())
     for entry in data:
         line = ""
         for header in headers:
-            line += (entry[header].ljust(lengths[header]) + ' '
+            line += (str(entry[header]).ljust(lengths[header]) + ' '
                      if entry[header] is not None
                      else ' ' * lengths[header] + ' ')
         entries.append(line.strip())
