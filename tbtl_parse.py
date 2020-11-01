@@ -70,7 +70,7 @@ def get_headers_info_from_line(line: str, header_names: list = None) -> list:
 
     for i, field in enumerate(fields):
         field_name = field.group()
-        headers.append({'name': (field_name.lower().strip()
+        headers.append({'name': (field_name.strip()
                                  if header_names is None
                                  else header_names[i+1]),
                         'start': field.start(),
