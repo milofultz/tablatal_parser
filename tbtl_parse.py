@@ -62,7 +62,7 @@ def get_headers_info_from_line(line: str, header_names: list = None) -> list:
 
     headers = []
     if line[0] in [';', ' ']:
-        headers.append({'name': ('x'
+        headers.append({'name': ('ID'
                                  if header_names is None
                                  else header_names[0]),
                         'start': 0,
@@ -106,6 +106,9 @@ def save_json_data(data, filepath):
 
 
 if __name__ == '__main__':
-    header_names = [header.strip() for header in args.headers.split(',')]
+    if args.headers is not None:
+        header_names = [header.strip() for header in args.headers.split(',')]
+    else:
+        header_names = None
     parsed_data = parse_tablatal_file(args.input, header_names)
     save_json_data(parsed_data, args.output)
