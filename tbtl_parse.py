@@ -14,7 +14,9 @@ import sys
 parser = argparse.ArgumentParser()
 parser.add_argument("input", help="input file to be parsed")
 parser.add_argument("output", help="filepath to write parsed data as JSON")
-parser.add_argument("--headers", help="define headers of columns, separated by commas", type=str)
+parser.add_argument("--headers",
+                    help="define headers of columns, separated by commas",
+                    type=str)
 args = parser.parse_args()
 
 
@@ -34,7 +36,7 @@ def load_data(filepath):
 def parse_tablatal_data(tablatal_data: list, header_names: list) -> list:
     headers, entries = get_headers_and_entries(tablatal_data, header_names)
     database = []
-    for line in tablatal_data:
+    for line in entries:
         if line == '' or line[0] == ';':
             continue
         entry = create_entry(headers, line)
