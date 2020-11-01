@@ -27,8 +27,8 @@ utility if it ever comes up as a problem).
 * The content is everything that follows the header line. Empty fields
   default to None.
   
-Examples can be found [here at neauoire's page](https://github.com/XXIIVV
-/oscean/tree/master/src/database).  
+Examples can be found 
+[here at neauoire's page](https://github.com/XXIIVV/oscean/tree/master/src/database).  
 
 
 ### Usage
