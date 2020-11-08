@@ -46,7 +46,7 @@ def parse_tablatal_data(tablatal_data: list, header_names: list) -> list:
 
 def get_headers_and_entries(tablatal_data, header_names: list):
     for index, line in enumerate(tablatal_data):
-        if line == '':
+        if line in [';', '']:
             continue
         if line == line.upper():
             headers = get_headers_info_from_line(line, header_names)
