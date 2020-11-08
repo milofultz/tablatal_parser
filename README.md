@@ -26,7 +26,8 @@ with JSON files.
 
 * Comments are preceded by a semicolon.
 * The header line is expected to be all caps and may be preceded by a
-  semicolon as if a comment. The spacing of this header line sets the spacing
+  semicolon as if a comment (see below). The spacing of this header line sets
+   the spacing
   for all content that follows.
 * The content is everything that follows the header line. Empty fields
   default to None.
@@ -38,10 +39,13 @@ Examples can be found
 ### Usage
 
 As a CLI, the Tablatal-to-JSON parser takes in a plaintext Tablatal file 
-(`tbtl`) and returns a `JSON` file. There is one optional argument
-`--headers`, which you can supply a set of custom headers separated by
-commas for the parser to use when outputting. For instance, if the
-beginning of your file including your headers looks like this:
+(`tbtl`) and returns a `JSON` file. 
+
+There is one optional argument `--headers`, which you can supply a set of
+custom headers separated by commas for the parser to use when outputting. If
+this option is unused and the header line is found on a commented line, the
+first field will be called "ID" by default. For instance, if the beginning
+of your file including your headers looks like this:
 
 ```
 ; The horaire is a collection of logs.
@@ -60,5 +64,6 @@ from giving it a useful name. This can be remedied via the CLI:
 `python3 tbtl_parse.py input.tbtl output.json --headers "DATE, CODE, HOST, PIC,
  NAME"`
  
- The JSON-to-Tablatal parser needs a little user input to determine the
- order of the fields, but otherwise operates the same as the other utility.
+ The JSON-to-Tablatal parser will ask for some little user input to determine
+ the order of the fields, but otherwise operates the same as the other
+ utility.
