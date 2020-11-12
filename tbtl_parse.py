@@ -11,6 +11,9 @@ import re
 import sys
 
 
+from utilities import load_data
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("input", help="input file to be parsed")
 parser.add_argument("output", help="filepath to write parsed data as JSON")
@@ -25,12 +28,6 @@ def parse_tablatal_file(filepath, header_names: list = None) -> list:
     tablatal_data = tablatal_data.split('\n')
     output = parse_tablatal_data(tablatal_data, header_names)
     return output
-
-
-def load_data(filepath):
-    with open(filepath, 'r') as f:
-        data = f.read()
-    return data
 
 
 def parse_tablatal_data(tablatal_data: list, header_names: list) -> list:

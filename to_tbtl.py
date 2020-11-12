@@ -2,6 +2,9 @@ import argparse
 import json
 
 
+from utilities import save_data
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("input", help="input file to be parsed")
 parser.add_argument("output", help="filepath to write parsed data as JSON")
@@ -64,11 +67,6 @@ def format_parsed_data(data: list, headers: list, lengths: dict) -> str:
                      else ' ' * lengths[header] + ' ')
         entries.append(line.strip())
     return '\n'.join(entry for entry in entries)
-
-
-def save_data(tbtl_data, filepath):
-    with open(filepath, 'w') as f:
-        f.write(tbtl_data)
 
 
 if __name__ == "__main__":
