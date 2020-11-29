@@ -32,7 +32,7 @@ def get_last_field_length(data: str, header_info: list) -> int:
 
 
 def get_new_field_info(headers_info):
-    new_field = {}
+    new_field = dict()
     new_field['name'] = get_new_field_name()
     new_field['length'] = get_new_field_length()
     new_field['index'] = get_new_field_index(headers_info)
