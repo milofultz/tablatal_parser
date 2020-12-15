@@ -13,15 +13,6 @@ import sys
 from utilities import load_data, get_headers_info_from_line
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("input", help="input file to be parsed")
-parser.add_argument("output", help="filepath to write parsed data as JSON")
-parser.add_argument("--headers",
-                    help="define headers of columns, separated by commas",
-                    type=str)
-args = parser.parse_args()
-
-
 def parse_tablatal_file(filepath, header_names: list = None) -> list:
     tablatal_data = load_data(filepath)
     tablatal_data = tablatal_data.split('\n')
@@ -49,8 +40,11 @@ def get_headers_and_entries(tablatal_data, header_names: list):
             entries = tablatal_data[index+1:]
             return headers, entries
 
-    print('Header not found')
-    sys.exit()
+    if header_names is None:
+        print('Header not found')
+        header_input = input("Enter header line: ")
+        tablatal_data.insert(0, header_input)
+        return get_headers_and_entries(tablatal_data, None)
 
 
 def create_entry(headers: list, line: str) -> dict:
@@ -79,6 +73,14 @@ def save_json_data(data, filepath):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", help="input file to be parsed")
+    parser.add_argument("output", help="filepath to write parsed data as JSON")
+    parser.add_argument("--headers",
+                        help="define headers of columns, separated by commas",
+                        type=str)
+    args = parser.parse_args()
+
     if args.headers is not None:
         header_names = [header.strip() for header in args.headers.split(',')]
     else:
