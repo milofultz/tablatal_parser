@@ -7,13 +7,14 @@
 # Output: "Lunch: 0:26"
 
 import argparse
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 import tbtl_parse
 
 
 def get_total_time_logged_by_project(entries: list) -> str:
-    project_sums = dict()
+    project_sums = defaultdict(timedelta)
     for entry in entries:
         project = entry["PROJECT"]
         if entry.get('START') is not None:
@@ -23,14 +24,10 @@ def get_total_time_logged_by_project(entries: list) -> str:
         else:
             hours_time, minute_time = [int(num) for num in entry.get('END').split(':')]
             time_spent = timedelta(hours=hour_time, minutes=minute_time)
-        if projects.get(project_name) is None:
-            project_sums[project] = timedelta()
         project_sums[project] += time_spent
     output = "\n"
-    for project in project_sums.keys():
-        total_hours, remainder = divmod(project_sums[project].seconds, 3600)
-        total_minutes = remainder // 60
-        output += f"{project}: {total_hours}:{total_minutes:02}\n"
+    for project, total_time in project_sums.items():
+        output += f"{project}: {total_time}\n"
     return output
 
 
