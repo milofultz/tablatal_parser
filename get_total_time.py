@@ -13,6 +13,9 @@ from datetime import datetime, timedelta
 import tbtl_parse
 
 
+TBTL_LOG = '/Users/oldsilverboi/Dropbox (Personal)/PARA/0 Meta/log.tbtl'
+
+
 def get_total_time_logged_by_project(entries: list) -> str:
     project_sums = defaultdict(timedelta)
     for entry in entries:
@@ -20,9 +23,11 @@ def get_total_time_logged_by_project(entries: list) -> str:
         if entry.get('START') is not None:
             start_time = datetime.strptime(entry['START'], "%H:%M")
             end_time = datetime.strptime(entry['END'], "%H:%M")
+            if end_time < start_time:
+                end_time += timedelta(hours=24)
             time_spent = end_time - start_time
         else:
-            hours_time, minute_time = [int(num) for num in entry.get('END').split(':')]
+            hour_time, minute_time = [int(num) for num in entry.get('END').split(':')]
             time_spent = timedelta(hours=hour_time, minutes=minute_time)
         project_sums[project] += time_spent
     output = "\n"
@@ -32,9 +37,5 @@ def get_total_time_logged_by_project(entries: list) -> str:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input", help="input file to be parsed")
-    args = parser.parse_args()
-
-    log = tbtl_parse.parse_tablatal_file(args.input)
+    log = tbtl_parse.parse_tablatal_file(TBTL_LOG)
     print(get_total_time_logged_by_project(log))
