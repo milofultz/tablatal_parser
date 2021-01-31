@@ -6,20 +6,27 @@
 #
 # Output: "Lunch: 0:26"
 
-import argparse
 from collections import defaultdict
 from datetime import datetime, timedelta
+from operator import itemgetter
+import sys
 
 import tbtl_parse
+import utilities
 
 
 TBTL_LOG = '/Users/oldsilverboi/Dropbox (Personal)/PARA/0 Meta/log.tbtl'
+DEF_HEADER = 'DATE   START END   CAT PROJECT             SESSION                  SUMMARY'
 
 
 def get_total_time_logged_by_project(entries: list) -> str:
-    project_sums = defaultdict(timedelta)
+    entries = sorted(entries, key=itemgetter('PROJECT')) 
+
+    project_sums = dict()
     for entry in entries:
-        project = entry["PROJECT"]
+        project, session = entry["PROJECT"], entry["SESSION"]
+        if not project_sums.get(project):
+            project_sums[project] = defaultdict(timedelta)
         if entry.get('START') is not None:
             start_time = datetime.strptime(entry['START'], "%H:%M")
             end_time = datetime.strptime(entry['END'], "%H:%M")
@@ -29,13 +36,24 @@ def get_total_time_logged_by_project(entries: list) -> str:
         else:
             hour_time, minute_time = [int(num) for num in entry.get('END').split(':')]
             time_spent = timedelta(hours=hour_time, minutes=minute_time)
-        project_sums[project] += time_spent
+        project_sums[project]["total_time"] += time_spent
+        project_sums[project][session] += time_spent
     output = "\n"
-    for project, total_time in project_sums.items():
-        output += f"{project}: {total_time}\n"
+    for project, data in project_sums.items():
+        output += f"{project}: {data.get('total_time')}\n"
+        for session, session_time in data.items():
+            if session == "total_time":
+                continue
+            output += f"    {session}: {session_time}\n"
     return output
 
 
 if __name__ == "__main__":
-    log = tbtl_parse.parse_tablatal_file(TBTL_LOG)
-    print(get_total_time_logged_by_project(log))
+    if len(sys.argv) > 1:
+        TBTL_LOG = sys.argv[1]
+        log = utilities.load_data(TBTL_LOG).split('\n')
+        log.insert(0, DEF_HEADER)
+    else:
+        log = utilities.load_data(TBTL_LOG).split('\n')
+    parsed_log = tbtl_parse.parse_tablatal_data(log)
+    print(get_total_time_logged_by_project(parsed_log))

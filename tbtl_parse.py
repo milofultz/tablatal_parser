@@ -20,7 +20,7 @@ def parse_tablatal_file(filepath, header_names: list = None) -> list:
     return output
 
 
-def parse_tablatal_data(tablatal_data: list, header_names: list) -> list:
+def parse_tablatal_data(tablatal_data: list, header_names: list = None) -> list:
     headers, entries = get_headers_and_entries(tablatal_data, header_names)
     database = []
     for line in entries:
