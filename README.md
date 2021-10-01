@@ -15,7 +15,7 @@ From Devine's site:
 > In the Tablatal file, the first line declares the key, the
 spacing between each key defines the length of the parameters for all
 subsequent lines. 
- 
+
 It is a much more aesthetically pleasing plaintext data
 format, though the tradeoff is malleability, as you must define how large
 the field sizes are before getting going (I'll solve this with some kind of
@@ -40,15 +40,18 @@ Examples can be found [here at neauoire's page](https://github.com/XXIIVV/oscean
 
 #### TBTL to JSON
 
-As a CLI, the Tablatal-to-JSON parser takes in a plaintext Tablatal file (`.tbtl`) and returns a `JSON` file.
+`python3 tbtl_json.py ./path/to/input.tbtl [--headers HEADERS]`
 
-`python3 tbtl_parse.py ./path/to/input.tbtl ./path/to/output.json [--headers HEADERS]`
+#### JSON to TBTL
+ 
+`python3 json_tbtl.py ./path/to/input.tbtl [--headers HEADERS]`
+ 
+#### `--headers` Option
 
-##### Headers Option
+Using `--headers` when *parsing* `tbtl` will allow you to supply a set of
+custom headers separated by commas for the parser to use when outputting JSON.
 
-There is one optional argument `--headers`, which you can supply a set of
-custom headers separated by commas for the parser to use when outputting. If
-this option is unused and the header line is found on a commented line, the
+If this option is unused and the header line is found on a commented line, the
 first field will be called "ID" by default. For instance, if the beginning
 of your file including your headers looks like this:
 
@@ -66,9 +69,7 @@ of your file including your headers looks like this:
 The header line is started by a semicolon, which would obfuscate the parser
 from giving it a useful name. This can be remedied via the CLI:
 
-`python3 tbtl_parse.py input.tbtl output.json --headers "DATE, CODE, HOST, PIC, NAME"`
+`python3 tbtl_parse.py ./path/to/input.tbtl --headers "DATE, CODE, HOST, PIC, NAME"`
 
-#### JSON to TBTL
- 
-The JSON-to-Tablatal parser will ask for some user input to determine the order of the fields, but otherwise operates the same as the other utility.
- 
+Using `--headers` when *outputting* `tbtl` will allow you to supply the order 
+you want your columns to be output. 
