@@ -1,19 +1,17 @@
 import argparse
 import json
+import re
 import sys
 
 
-from utilities import load_data, get_headers_info_from_line
-
-
-def parse_tablatal_file(filepath, header_names: list = None) -> list:
-    tablatal_data = load_data(filepath)
-    tablatal_data = tablatal_data.split('\n')
-    output = parse_tablatal_data(tablatal_data, header_names)
-    return output
+parser = argparse.ArgumentParser()
+parser.add_argument("input", help="input file to be parsed")
+parser.add_argument("--headers", help="define headers of columns, separated by commas", type=str)
+args = parser.parse_args()
 
 
 def parse_tablatal_data(tablatal_data: list, header_names: list = None) -> list:
+    """ Convert tablatal data into list of dicts """
     headers, entries = get_headers_and_entries(tablatal_data, header_names)
     database = []
     for line in entries:
@@ -24,7 +22,8 @@ def parse_tablatal_data(tablatal_data: list, header_names: list = None) -> list:
     return database
 
 
-def get_headers_and_entries(tablatal_data, header_names: list):
+def get_headers_and_entries(tablatal_data: list, header_names: list):
+    """ Return headers and entries from data """
     for index, line in enumerate(tablatal_data):
         if line in [';', '']:
             continue
@@ -33,14 +32,34 @@ def get_headers_and_entries(tablatal_data, header_names: list):
             entries = tablatal_data[index+1:]
             return headers, entries
 
-    if header_names is None:
-        print('Header not found')
-        header_input = input("Enter header line: ")
-        tablatal_data.insert(0, header_input)
-        return get_headers_and_entries(tablatal_data, None)
+    sys.exit('Header not found. Please use `--headers` flag.')
+
+
+def get_headers_info_from_line(line: str, header_names: list = None) -> list:
+    fields = re.finditer(r'\w+\s*', line)
+
+    headers = []
+    if line[0] in [';', ' ']:
+        headers.append({'name': ('ID'
+                                 if header_names is None
+                                 else header_names[0]),
+                        'start': 0,
+                        'length': re.search('\s+', line).end()})
+
+    for i, field in enumerate(fields):
+        field_name = field.group()
+        headers.append({'name': (field_name.strip()
+                                 if header_names is None
+                                 else header_names[i+1]),
+                        'start': field.start(),
+                        'length': len(field_name)})
+
+    headers[-1]['length'] = None
+    return headers
 
 
 def create_entry(headers: list, line: str) -> dict:
+    """ Return entry from the line and headers """
     entry = {}
     for header in headers:
         field_name = header['name']
@@ -48,9 +67,10 @@ def create_entry(headers: list, line: str) -> dict:
     return entry
 
 
-def get_value_from_line(line: str, header_info: dict):
-    field_start = header_info['start']
-    field_length = header_info['length']
+def get_value_from_line(line: str, field_info: dict):
+    """ Return the field value from the line """
+    field_start = field_info['start']
+    field_length = field_info['length']
     value = line[field_start:]
     value = value[:field_length]
     value = value.rstrip()
@@ -60,23 +80,15 @@ def get_value_from_line(line: str, header_info: dict):
         return value
 
 
-def save_json_data(data, filepath):
-    with open(filepath, 'w') as f:
-        json.dump(data, f, sort_keys=True, indent=4)
-
-
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input", help="input file to be parsed")
-    parser.add_argument("output", help="filepath to write parsed data as JSON")
-    parser.add_argument("--headers",
-                        help="define headers of columns, separated by commas",
-                        type=str)
-    args = parser.parse_args()
-
     if args.headers is not None:
         header_names = [header.strip() for header in args.headers.split(',')]
     else:
         header_names = None
-    parsed_data = parse_tablatal_file(args.input, header_names)
-    save_json_data(parsed_data, args.output)
+
+    with open(args.input, 'r') as f:
+        tablatal_entries = f.read().split('\n')
+
+    parsed_data = parse_tablatal_data(tablatal_entries, header_names)
+
+    print(json.dumps(parsed_data))
