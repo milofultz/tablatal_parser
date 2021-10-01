@@ -10,9 +10,13 @@ in a plain text editor. I eventually found
 [Devine's Tablatal](https://wiki.xxiivv.com/site/tablatal.html) and am looking
 forward to using it with my system. 
 
-From Devine's site: "In the Tablatal file, the first line declares the key, the
+From Devine's site: 
+
+> In the Tablatal file, the first line declares the key, the
 spacing between each key defines the length of the parameters for all
-subsequent lines." It is a much more aesthetically pleasing plaintext data
+subsequent lines. 
+ 
+It is a much more aesthetically pleasing plaintext data
 format, though the tradeoff is malleability, as you must define how large
 the field sizes are before getting going (I'll solve this with some kind of
 utility if it ever comes up as a problem). 
@@ -25,21 +29,22 @@ with JSON files.
 ### Tablatal Syntax
 
 * Comments are preceded by a semicolon.
-* The header line is expected to be all caps and may be preceded by a
-  semicolon as if a comment (see below). The spacing of this header line sets
-   the spacing
-  for all content that follows.
-* The content is everything that follows the header line. Empty fields
-  default to None.
+* The header line is all caps and may be preceded by a semicolon (see note below re: `--headers`).
+* The spacing of the header line sets the spacing for every column.
+* The content is everything that follows the header line. Empty fields default to None.
   
-Examples can be found 
-[here at neauoire's page](https://github.com/XXIIVV/oscean/tree/master/src/database).  
+Examples can be found [here at neauoire's page](https://github.com/XXIIVV/oscean/tree/master/src/database).  
 
 
 ### Usage
 
-As a CLI, the Tablatal-to-JSON parser takes in a plaintext Tablatal file 
-(`tbtl`) and returns a `JSON` file. 
+#### TBTL to JSON
+
+As a CLI, the Tablatal-to-JSON parser takes in a plaintext Tablatal file (`.tbtl`) and returns a `JSON` file.
+
+`python3 tbtl_parse.py ./path/to/input.tbtl ./path/to/output.json [--headers HEADERS]`
+
+##### Headers Option
 
 There is one optional argument `--headers`, which you can supply a set of
 custom headers separated by commas for the parser to use when outputting. If
@@ -61,9 +66,9 @@ of your file including your headers looks like this:
 The header line is started by a semicolon, which would obfuscate the parser
 from giving it a useful name. This can be remedied via the CLI:
 
-`python3 tbtl_parse.py input.tbtl output.json --headers "DATE, CODE, HOST, PIC,
- NAME"`
+`python3 tbtl_parse.py input.tbtl output.json --headers "DATE, CODE, HOST, PIC, NAME"`
+
+#### JSON to TBTL
  
- The JSON-to-Tablatal parser will ask for some little user input to determine
- the order of the fields, but otherwise operates the same as the other
- utility.
+The JSON-to-Tablatal parser will ask for some user input to determine the order of the fields, but otherwise operates the same as the other utility.
+ 

@@ -1,10 +1,3 @@
-"""
-
-In the Tablatal file, the first line declares the key, the spacing between each
-key defines the length of the parameters for all subsequent lines.
-
-"""
-
 import argparse
 import json
 import sys
