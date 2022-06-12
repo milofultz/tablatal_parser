@@ -1,3 +1,5 @@
+# Migrated to [Codeberg](https://codeberg.org/milofultz/tablatal_parser)
+
 # Tablatal Parser
 
 I'm rethinking my Track and Tod apps for tracking my tasks, mood, and other
